@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int     @id @default(autoincrement())
+  login         String  @unique 
+  pseudo        String  @unique
+  refreshToken  String?
+  avatar        String?
+  twoFAState    Boolean @default(false)
+  twoFACode     String?
+  xp            Float   @default(0.00)
+  rank          Int?
+  winRate       Float?
+  wins          Int     @default(0)
+  loses         Int     @default(0)
+  gamesNumber   Int     @default(0)
+  gameHistory   Int[]
+
+  Friends       Int[]
+  Following     Int[]
+  Followed      Int[]
+
+  Blocks        Int[]
+  Blocking      Int[]
+  Blocked       Int[]
+
+  home Game[] @relation("Home")
+  away Game[] @relation("Away")
+
+  blocking Block[] @relation("Blocking")
+  blocked  Block[] @relation("Blocked")
+
+  ownerIn  Channel[]     @relation("ChannelOwners")
+  memberIn Channel[]     @relation("ChannelMembers")
+  adminIn  Channel[]     @relation("ChannelAdmins")
+  BannedIn Channel[]     @relation("ChannelBans")
+  MutedIn  ChannelMute[]
+
+  messages Message[]
+
+}
+
+model Game {
+  id          Int    @id @default(autoincrement())
+  homeUserId  Int
+  awayUserId  Int
+  map         String?
+
+  p1score    Int
+  p2score    Int
+
+  homeUser User @relation("Home", fields: [homeUserId], references: [id])
+  awayUser User @relation("Away", fields: [awayUserId], references: [id])
+}
+
+model Block {
+  id         Int @id @default(autoincrement())
+  blockingId Int
+  blockedId  Int
+
+  blocking User @relation("Blocking", fields: [blockingId], references: [id])
+  blocked  User @relation("Blocked", fields: [blockedId], references: [id])
+}
+
+model Channel {
+  id            Int         @id @default(autoincrement())
+  image         String?      
+  name          String      @default(uuid())
+  type          channelType
+  hasPassword   Boolean     @default(false)
+  password      String?
+  creationDate  DateTime    @default(now())
+
+  owners      User[] @relation("ChannelOwners")
+  members     User[] @relation("ChannelMembers")
+  admins      User[] @relation("ChannelAdmins")
+  banned      User[] @relation("ChannelBans")
+
+  mutedUsers ChannelMute[]
+
+  messages Message[]
+  @@unique([id])
+}
+
+enum channelType {
+  PUBLIC
+  PROTECTED
+  PRIVATE
+  DIRECT
+}
+
+model ChannelMute {
+  id           Int      @id @default(autoincrement())
+  ChannelId    Int
+  userId       Int
+  muteAt       DateTime @default(now())
+  finishAt     DateTime
+  finished     Boolean  @default(false)
+
+  channel Channel @relation(fields: [ChannelId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  ownerId   Int
+  channelId Int
+  createdAt DateTime  @default(now())
+  content   String
+
+  owner   User    @relation(fields: [ownerId], references: [id])
+  channel Channel @relation(fields: [channelId], references: [id])
+}

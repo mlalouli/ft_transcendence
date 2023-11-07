@@ -1,0 +1,378 @@
+@import "style2.scss";
+@import "style1.scss";
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.backround  {
+    position: absolute;
+    background-image: url("../img/bac2.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+/* .pong  {
+    display: flex;
+    position: relative;
+    margin-top: 100px;
+    margin-left:300px;
+    margin: center; */
+
+    /* display: flex; */
+    
+    /* font-size: 200px;
+    font-style: italic;
+    color: #0096cc3f;
+    z-index: 1;
+    @media (max-width: 768px) {
+        font-size: 150px;
+        margin-top: 100px;
+        z-index: 1;
+    }
+    
+    @media (max-width: 992px) {
+        width: 300px;
+        float: none;
+        margin: 5px 10px;
+        z-index: 1;
+    }
+    
+    @media (max-width: 1200px) {
+        width: 200px;
+        float: none;
+        margin: 5px 10px;
+        z-index: 1;
+    } */
+
+    /* @media (max-width: $screen-lg-min) {
+        width: 600px;
+    } */
+/* } */
+.text {
+    display: flex;
+    position: relative;
+    left: -300px;
+    top: -500px;
+    height: 282.88px;
+    width: 572px;
+    background: linear-gradient(#ffffff31, #4B3092) padding-box,
+    linear-gradient(to right, rgba(87, 63, 154, 0.895), #0d75dc5f) border-box;
+    border-radius: 40px;
+    border: 4px solid transparent;
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    background-color: rgba(87, 63, 154, 0.895);
+    border-radius: 12px;
+    border: 3px solid rgba(255, 255, 255, 0.125);
+    @media (max-width: 768px) {
+        width: 100px;
+        position: relative;
+        /* top: 30px; */
+        left: 180px;
+    }
+
+    @media (max-width: 992px) {
+        width: 300px;
+        float: none;
+        position: relative;
+        top: -500px;
+        left: -200px;
+        z-index: 1;
+    }
+
+    @media (max-width: 1200px) {
+        width: 400px;
+        float: none;
+        position: relative;
+        top: -500px;
+        left: 50px;
+    }
+}
+/* .login {
+    display: flex;
+    position: relative;
+    
+    background : linear-gradient(to right, #097095, #acb3b64b) border-box;;
+    height: 90px;
+    width: 200px;
+    border-radius: 20px;
+    z-index: 1; */
+    /* @media (max-width: 768px) {
+        position: relative;
+        top: 300px;
+        left: 500px;
+    }
+
+    @media (max-width: 992px) {
+        width: 300px;
+        float: none;
+        position: relative;
+        top: 50px;
+        left: 50px;
+    }
+
+    @media (max-width: 1200px) {
+        width: 200px;
+        float: none;
+        position: relative;
+        top: 250px;
+        left: -130px;
+    } */
+/* } */
+
+/* .login p { */
+    /* position: relative; */
+    /* position: relative;
+    margin-top: 45px;
+    margin-left: 30px;
+} */
+
+/* .im img {
+    position: relative;
+    margin-top: -500px;
+    margin-left: 700px;
+    height: 600px;
+    z-index: 1;
+    @media (max-width: 768px) {
+        position: relative;
+        top: 100px;
+        left: 100px;
+    }
+
+    @media (max-width: 992px) {
+        width: 300px;
+        float: none;
+        position: relative;
+        top: -50px;
+        left: -600px;
+        z-index: 0;
+    }
+
+    @media (max-width: 1200px) {
+        width: 400px;
+        float: none;
+        position: relative;
+        top: 150px;
+        left: -600px;
+    }
+} */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+  
+  .gif-container {
+    position: relative; /* Set the container to a relative position */
+    max-width: 100%; /* The GIF will not exceed the width of its parent container */
+    height: auto; /* Maintain the aspect ratio, so the GIF won't stretch */
+    margin-top: 400px; /* Adjust the top margin as needed */
+    left: 550px;
+    
+    @media (max-width: 1200px) {
+        width: 400px;
+        float: none;
+        position: relative;
+        top: 100px;
+        left: 50px;
+        z-index: 1;
+    }
+    @media (max-width: 287px) {
+        width: 100px;
+        height: 100px;
+        float: none;
+        position: relative;
+        top: 0px;
+        left: -150px;
+    }
+    @media (max-width: 768px) {
+        width: 100px;
+        position: relative;
+        left: 0px;
+    }
+    @media (max-width: 992px) {
+        width: 500px;
+        float: none;
+        position: relative;
+        top: 100px;
+        left: 50px;
+    }
+    
+  }
+  .gif-container img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .container1 {
+    padding: 20px;
+  }
+  
+  .login {
+    width: 300px;
+    height: 350px;
+    position: relative;
+    margin-top: 800px;
+    margin-left: -10px;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 40px;
+    background : linear-gradient(to right, #097095, #acb3b64b) ;
+    @media (max-width: 1200px) {
+        width: 300px;
+        height: 300px;
+        float: none;
+        position: relative;
+        top: 20px;
+        left: 100px;
+    }
+    @media (max-width: 287px) {
+        width: 100px;
+        height: 100px;
+        float: none;
+        position: relative;
+        top: 0px;
+        left: -150px;
+    }
+    @media (max-width: 768px) {
+        width: 100px;
+        position: relative;
+        /* top: 30px; */
+        left: 180px;
+    }
+
+    @media (max-width: 992px) {
+        width: 300px;
+        float: none;
+        position: relative;
+        top: 50px;
+        left: 150px;
+        z-index: 1;
+    }
+  }
+  
+  .login img {
+    max-width: 100px;
+    height: auto;
+    margin-bottom: 20px;
+    @media (max-width: 1200px) {
+        width: 100px;
+    }
+    @media (max-width: 287px) {
+        width: 60px;
+        height: 60px;
+  }
+}
+  
+  .login p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    @media (max-width: 1200px) {
+        /* width: 200px; */
+
+        float: none;
+        position: relative;
+        /* top: -20px;
+        left: -20px; */
+    }
+    @media (max-width: 287px) {
+        font-size: 10px;
+        /* position: relative;
+        top: -20px;
+        left: -69px; */
+    }
+  }
+
+  .glowing-button {
+    font-size: 18px;
+    /* padding: 10px 20px; */
+    height: 53px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #1240bd, #400664, #0074e4, #00c48c);
+    background-size: 200% 200%;
+    color: #fff;
+    cursor: pointer;
+    transition: background-position 0.5s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    top: 50px;
+    
+  }
+  .glowing-button a{
+    color: #ccc;
+    text-decoration-line: none;
+  }
+  
+  .glowing-button:hover {
+    background-position: right bottom;
+  }
+  .glowing-button:hover a {
+    color: #ccc;
+  }
+  
+  .glowing-button:active {
+    background-size: 100%;
+  }
+  
+
+  .input-wrapper {
+    width: 100%;
+    height: 2.5rem;
+    border: none;
+    border-radius: 10px;
+    padding: 0 15px;
+    box-shadow: 0px 0px 8px #ddd;
+    background-color: white;
+    display: flex;
+    align-items: center;
+  }
+  
+  input {
+    background-color: transparent;
+    border: none;
+    height: 100%;
+    font-size: 1.25rem;
+    width: 100%;
+    margin-left: 5px;
+  }
+  
+  input:focus {
+    outline: none;
+  }
+  
+  #search-icon {
+    color: royalblue;
+  }
+
+  .search-result {
+    padding: 10px 20px;
+  }
+  
+  .search-result:hover {
+    background-color: #efefef;
+  }
+
+  .results-list {
+    width: 100%;
+    background: linear-gradient(45deg, #1240bd, #400664, #0074e4, #00c48c);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 8px #ddd;
+    border-radius: 10px;
+    margin-top: 50%;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  

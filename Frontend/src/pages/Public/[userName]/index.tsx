@@ -1,0 +1,287 @@
+import Head from 'next/head'
+import Image from 'next/image'
+import Header from "@/components/header";
+import Navebar from '@/components/Navbar';
+// import styles from '../styles/style2.scss'
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from 'react-router-dom';
+import  Friends  from "../Friend";
+import { getAvatarQ, getUserAvatar } from '@/queries/avatarQueries';
+import { IUserStatus, userModel } from '@/global/interface';
+import { NotifCxt, UserStatusCxt } from '@/pages/App';
+import { getOtherUser } from '@/queries/userQueries';
+import { addFriendQ } from '@/queries/friendsQueries';
+
+import DisplayHistory from '../History';
+import Switch from '@/components/switch';
+import { IconContext } from 'react-icons';
+import { RiEmotionLine } from 'react-icons/ri';
+import { FaTableTennisPaddleBall } from 'react-icons/fa6';
+import { GameStats } from '@/pages/Profile';
+
+
+
+
+const userInfoInit: userModel = {
+  id: 0,
+  username: "",
+  avatar: "",
+  friends: [],
+  wins: 0,
+  loses: 0,
+  nGames: 0,
+  winrate: 0,
+  rank: 0,
+  xp: 0,
+};
+
+const initUser = (res: any, setUserInfo: any) => {
+  userInfoInit.id = res.id;
+  userInfoInit.username = res.pseudo;
+  userInfoInit.avatar = res.avatar;
+  userInfoInit.friends = res.Friends;
+  userInfoInit.wins = res.wins;
+  userInfoInit.loses = res.loses;
+  userInfoInit.winrate = res.winRate === null ? 0 : res.winRate;
+  userInfoInit.nGames = res.gamesNumber;
+  userInfoInit.rank = res.rank;
+  userInfoInit.xp = res.xp;
+  setUserInfo(userInfoInit);
+};
+
+export default function Profile(){
+
+  const usersStatus = useContext(UserStatusCxt);
+  const notif = useContext(NotifCxt);
+  let params = useParams();
+  const [userInfo, setUserInfo] = useState<userModel>(userInfoInit);
+  const [isFetched, setIsFetched] = useState(false);
+  const [avatarURL, setAvatarURL] = useState("");
+  const [isUser, setIsUser] = useState(true);
+  const [status, setStatus] = useState(0);
+  let lvl = Math.floor(userInfo.xp);
+  let xp = parseFloat((userInfo.xp - lvl).toFixed(2));
+  let percent = xp * 100;
+
+  if (isFetched && +params.userName! !== userInfo.id)
+    setIsFetched(false);
+  useEffect(() => {
+    const getAvatar = async () => {    
+      
+      const res :  undefined | string | Blob | MediaSource = await getUserAvatar(userInfoInit.id);
+      if (res !== undefined && res instanceof Blob)
+        setAvatarURL(URL.createObjectURL(res));
+      else if (res === "error")
+        setAvatarURL("https://img.myloview.fr/stickers/default-avatar-profile-in-trendy-style-for-social-media-user-icon-400-228654852.jpg");
+    };
+    if (isFetched && userInfoInit.id)
+      getAvatar();
+  }, [isFetched]);
+
+  useEffect(() => {
+    const fetchIsUser = async () => {
+      let res;
+      if (!isFetched && params.userName !== undefined ){
+        res = await getOtherUser(+params.userName);
+        if (res !== "error"){  
+          initUser(res, setUserInfo);
+          setIsFetched(true);
+        }
+        else
+          setIsUser(false);
+      }
+    };
+    fetchIsUser();
+  }, [isFetched, usersStatus]);
+
+
+
+
+  const  [users, setUsers] = useState([]);
+  const [showAlert, setShowAlert] = useState(true);
+  const [showPro, setShowPro] = useState(false);
+  const [showfre, setShowFr] = useState(false);
+
+  useEffect(() => {
+    let found = undefined;
+    if (isFetched && usersStatus && userInfo){
+      found = usersStatus.find((x: IUserStatus) => x.key === userInfo.id);
+      if (found)
+        setStatus(found.userModel.status);
+    }
+  }, [usersStatus, isFetched, userInfo]);
+
+  const handleClickFriend = (otherId: number, otherUsername: string) => {    
+    const addFriend = async () => {
+      const res = await addFriendQ(otherId);
+      if (res !== "error")
+        notif?.setNotifText("Friend Request is sent to " + otherUsername);
+      else
+        notif?.setNotifText("Friend Request not sent...");
+      notif?.setNotifShow(true);
+    };
+    addFriend();
+  };
+
+  let myId: number = 0;
+  if (localStorage.getItem('userID'))
+    myId = Number(localStorage.getItem('userID'));
+
+  
+  const toggleAlert = () =>{
+    
+    setShowFr(false);
+    setShowPro(false);
+    setShowAlert(true);
+  };
+  const togglePro = () =>{
+    // if (showPro){
+    //   setShowPro(false);
+    // return 
+    // }
+    setShowPro(true);
+    setShowAlert(false);
+    setShowFr(false);
+  };
+  const toggleFriend = () =>{
+    
+    setShowFr(true);
+    setShowPro(false);
+    setShowAlert(false);
+  };
+
+
+  const [level, setLevel] = useState<number>(2);
+  const [points, setPoints] = useState<number>(0);
+
+  const [buttonText, setButtonText] = useState('ADD Friend');
+
+function handleClick() {
+  setButtonText('Cancel');
+}
+  return (
+  <main>
+    {isUser && isFetched ?(
+    <div>
+      <Head>
+        <title>Create Next App</title>
+        <meta name="description" content="Generated by create next app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Header />
+      <div className="backround2">
+
+        <div className="main-container">
+          <div className="navcontainer">
+            <Navebar  />
+          </div>
+          <div className="main">
+            <div className="profile">
+              <div className="login" >
+                <div className="w-fit ">
+                  <div className=" relative  w-fit ">
+                      <img
+                        src={avatarURL}
+                        className=" w-[20rem] h-[20rem] rounded-full mx-[6rem] mt-4 "
+                        alt=""
+                      />
+                  </div>
+                {/* <button className="butt" style={{width:"20%", color:"white"}}onClick={handleClick}>{buttonText}</button> */}
+                <button className="butt" style={{width:"20%", color:"white"}} onClick={(e: any) => {handleClickFriend(userInfo.id, userInfo.username);}}>ADD Friend</button>
+                <h1 className="h">{userInfo.username}
+                 {status === 1 ?
+                                   <IconContext.Provider
+                                   value={{ color: '#14e00d', size: '25px'}}
+                                 >
+                                     <RiEmotionLine  />
+                                 </IconContext.Provider>
+                                  : status === 2 ?
+                                  <IconContext.Provider
+                                  value={{ color: 'orange', size: '25px'}}
+                                >
+                                    <FaTableTennisPaddleBall  />
+                                </IconContext.Provider>
+                                  : ''}
+                  </h1>
+                </div>
+                <div className=" w-[80%] flex items-center justify-center flex-col  ">
+                  <div className="w-[80%] h-[5rem] bg-gray-200 rounded-full dark:bg-white border-solid border-2 border-white overflow-hidden relative">
+                    <h6 className=" w-full h-full translate-y-2 absolute translate-x-[40%] ">
+                      level {lvl} - {percent}%
+                    </h6>
+                    <div
+                      className="bg-[#6D4E9C] h-full text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full "
+                      style={{ width: `${percent}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div className="list">
+              <div
+                style={{
+                  position:"relative",
+                  width:"80%",
+                  height:"50%",
+                  marginTop:"3%"
+                }}
+              >
+                {showAlert && <Alert2 id ={userInfo.id}/>}
+                {showfre && <DisplayHistory id = {userInfo.id} avatar = {avatarURL}/>}
+                {showPro && <GameStats infos={userInfo} />}
+        </div>
+        <div  className='b relative flex flex-row justify-center gap-[16px] w-full'>
+          <button className="glowing-button" onClick={toggleAlert}>Friends_List</button>
+          <button className="glowing-button" onClick={toggleFriend}>Match_History</button>
+          <button className="glowing-button" onClick={togglePro}>Game_Stats</button>
+        </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    ): isUser && !isFetched ? null: (
+      <main> User Not Found !</main>
+        )}
+      </main>
+    );
+};
+
+const Alert2 = ({id}:{id: number}) => {
+  const [showAlert, setShowAlert] = useState(false);
+    const [showPro, setShowPro] = useState(false);
+    const [showfre, setShowFr] = useState(true);
+
+
+    const toggleAlert = () =>{
+      
+      setShowFr(false);
+      setShowPro(false);
+      setShowAlert(true);
+    };
+    const togglePro = () =>{
+      setShowPro(true);
+      setShowAlert(false);
+      setShowFr(false);
+    };
+    const toggleFriend = () =>{
+      
+      setShowFr(true);
+      setShowPro(false);
+      setShowAlert(false);
+    };
+
+    const handleAccept = () => {
+      console.log('Accepted');
+    };
+  
+    const handleRefuse = () => {
+      console.log('Refused');
+    };
+    return <>
+      <Friends  id= {id}/>
+    </> ;
+  };

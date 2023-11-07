@@ -1,0 +1,81 @@
+version: "3"
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  #FRONT
+  front:
+    image: node:lts-alpine
+    container_name: frontend
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      NEXT_PUBLIC_FRONTEND_URL: ${FRONTEND_URL}
+      NEXT_PUBLIC_BACKEND_URL: ${BACKEND_URL}
+      NEXT_PUBLIC_SOCKET_URL: ${SOCKET_URL}
+    volumes:
+      - ./Frontend:/app
+    ports:
+      - "3000:3000"
+    restart: always
+    networks:
+      - backend
+
+    depends_on:
+      - back
+  #BACK
+  back:
+    image: node:lts-alpine
+
+    container_name: backend
+
+    working_dir: /app
+
+    command: sh -c "npm install && npx prisma migrate dev --name init && npm run start:dev"
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SITE_URL: ${SITE_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      BACKEND_URL: ${BACKEND_URL}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      BACKED_PORT: ${BACKEND_PORT}
+
+
+    volumes:
+      - ./backend:/app
+      - ./uploads:/app/image_dir
+
+    ports:
+      - "4000:4000"
+      - "5555:5555"
+
+    restart: always
+
+    networks:
+      - backend
+
+    depends_on:
+      - db
+  #DATABASE
+  db:
+    image: postgres:latest
+
+    restart: always
+
+    volumes:
+      - "./data:/var/lib/postgresql/data"
+
+    ports:
+      - 5432:5432
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - backend
